@@ -1,5 +1,5 @@
-# FIXME: Use a version number instead of the carbon tag
-FROM node:carbon
+# TODO: Version number should be customizable
+FROM node:8.11
 
 WORKDIR /app
 
