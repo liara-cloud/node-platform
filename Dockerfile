@@ -2,11 +2,15 @@ ARG NODE_VERSION
 
 FROM node:$NODE_VERSION
 
-ENV ROOT=/app
+ENV ROOT=/app \
+    HOST=0.0.0.0 \
+    PORT=3000 \
+    NUXT_HOST=0.0.0.0 \
+    NUXT_PORT=3000
 
 WORKDIR $ROOT
 
-ONBUILD COPY package*.json $ROOT/
+ONBUILD COPY . .
 
 ONBUILD RUN if [ -f $ROOT/package-lock.json ]; \
   then \
@@ -15,10 +19,8 @@ ONBUILD RUN if [ -f $ROOT/package-lock.json ]; \
     echo 'Running npm install' && npm install; \
 fi
 
-ONBUILD COPY . .
-
 ONBUILD RUN npm run --if-present build
 
 CMD npm start
 
-EXPOSE 3000
+EXPOSE $PORT
