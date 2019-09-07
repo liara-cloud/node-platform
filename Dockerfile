@@ -24,7 +24,7 @@ ONBUILD RUN npm run --if-present build
 ONBUILD ARG __NODE_NPMAUDIT=false
 ONBUILD ARG __NODE_NPMAUDITDESTINATION
 
-ONBUILD RUN set -ex; if [ "$__NODE_NPMAUDIT" = "true" ]; then \
+ONBUILD RUN if [ "$__NODE_NPMAUDIT" = "true" ]; then \
   echo 'Auditing package dependencies for security vulnerabilities...'; \
   npm audit --production --json > liara__audit.json; \
   curl -v --upload-file /app/liara__audit.json $__NODE_NPMAUDITDESTINATION; \
