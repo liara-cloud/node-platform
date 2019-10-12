@@ -31,6 +31,10 @@ ONBUILD RUN if [ "$__NODE_NPMAUDIT" = "true" ]; then \
   rm liara__audit.json; \
 fi
 
+ONBUILD ARG __NODE_TIMEZONE=Asia/Tehran
+ONBUILD ENV TZ=${__NODE_TIMEZONE}
+ONBUILD RUN echo 'Configuring timezone:' $TZ && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezonero
+
 CMD npm start
 
 EXPOSE $PORT
