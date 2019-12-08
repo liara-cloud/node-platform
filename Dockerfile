@@ -35,6 +35,9 @@ ONBUILD ARG __NODE_TIMEZONE=Asia/Tehran
 ONBUILD ENV TZ=${__NODE_TIMEZONE}
 ONBUILD RUN echo 'Configuring timezone:' $TZ && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezonero
 
+ONBUILD ARG __VOLUME_PATH
+ONBUILD ENV __VOLUME_PATH=${__VOLUME_PATH}
+
 CMD npm start
 
 EXPOSE $PORT
