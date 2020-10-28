@@ -10,6 +10,10 @@ ENV ROOT=/app \
 
 WORKDIR $ROOT
 
+# Fixes `npm update check failed` error
+# https://stackoverflow.com/a/60525400/6390238
+RUN npm config set update-notifier false
+
 ONBUILD COPY package*.json /app/
 
 ONBUILD RUN if [ -f $ROOT/package-lock.json ]; \
