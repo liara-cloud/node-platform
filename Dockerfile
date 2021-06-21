@@ -10,32 +10,20 @@ ENV ROOT=/app \
 
 WORKDIR $ROOT
 
-# Fixes `npm update check failed` error
-# https://stackoverflow.com/a/60525400/6390238
-RUN npm config set update-notifier false
+COPY lib/* /usr/local/lib/liara/
 
-ONBUILD COPY package*.json /app/
+ONBUILD ARG __NODE_NPMMIRROR=false
+ONBUILD ARG __NODE_NPMMIRRORURL
+ONBUILD ENV __NODE_NPMMIRROR=${__NODE_NPMMIRROR}
+ONBUILD ENV __NODE_NPMMIRRORURL=${__NODE_NPMMIRRORURL}
 
-ONBUILD RUN if [ -f $ROOT/package-lock.json ]; \
-  then \
-    echo '> Running npm ci...' && npm ci; \
-  else \
-    echo '> Running npm install...' && npm install --loglevel=error --no-audit; \
-fi
+ONBUILD COPY package*.json .npmrc* /app/
+
+ONBUILD RUN /usr/local/lib/liara/configure.sh
 
 ONBUILD COPY . .
 
 ONBUILD RUN npm run --if-present build
-
-ONBUILD ARG __NODE_NPMAUDIT=false
-ONBUILD ARG __NODE_NPMAUDITDESTINATION
-
-ONBUILD RUN if [ "$__NODE_NPMAUDIT" = "true" ]; then \
-  echo '> Auditing package dependencies for security vulnerabilities...'; \
-  npm audit --production --json > liara__audit.json; \
-  curl --upload-file /app/liara__audit.json $__NODE_NPMAUDITDESTINATION; \
-  rm liara__audit.json; \
-fi
 
 ONBUILD ARG __NODE_TIMEZONE=Asia/Tehran
 ONBUILD ENV TZ=${__NODE_TIMEZONE}
