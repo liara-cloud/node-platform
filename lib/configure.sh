@@ -2,8 +2,8 @@
 
 cat /usr/local/lib/liara/default_npm.config >> .npmrc
 
-if [ "$__NODE_NPMMIRROR" = "true" ]; then
-  echo '> Using mirror: ' $__NODE_NPMMIRRORURL
+if [ "$__NODE_MIRROR" = "true" ]; then
+  echo '> Using mirror: ' $__NODE_MIRRORURL
   cat /usr/local/lib/liara/mirror.config >> .npmrc
 fi
 
